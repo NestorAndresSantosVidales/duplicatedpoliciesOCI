@@ -71,11 +71,16 @@ Desde la consola de OCI, abre **Cloud Shell**.
 
 ### 2) Obtener el OCID del Tenancy / Get Tenancy OCID
 
-```bash
 oci iam compartment list --all --compartment-id-in-subtree true \
   | jq -r '.data[] | select(."compartment-id" == null) | .id'
 
-
+---
 ### 3) Obtener todas las politicas // Get all policies
-```bash
 oci iam policy list --compartment-id $OCI_TENANCY --all > policies.json
+
+### 4) Ejecutar script // execute script
+
+sh encontrar_duplicados_policies.sh
+
+### 5) validar duplicados en archivo statements.txt
+cat  statements.txt
