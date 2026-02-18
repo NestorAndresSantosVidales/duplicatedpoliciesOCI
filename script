@@ -1,0 +1,31 @@
+cat > encontrar_duplicados_policies.sh << 'EOF'
+#!/usr/bin/env bash
+set -euo pipefail
+
+INPUT="${1:-policies.json}"
+
+# Extract all statements (supports .data root or direct array)
+jq -r '
+  ( .data // . )[]
+  | .statements[]
+' "$INPUT" > statements.txt
+
+# Find duplicated statements and line numbers
+awk '
+{
+  line = NR
+  stmt = $0
+  if (lines[stmt] == "")
+    lines[stmt] = line
+  else
+    lines[stmt] = lines[stmt] "," line
+  count[stmt]++
+}
+END {
+  for (s in count) {
+    if (count[s] > 1) {
+      printf "DUPLICATED STATEMENT (%d times):\n%s\nLines: %s\n\n", count[s], s, lines[s]
+    }
+  }
+}' statements.txt
+EOF
