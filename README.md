@@ -74,3 +74,8 @@ Desde la consola de OCI, abre **Cloud Shell**.
 ```bash
 oci iam compartment list --all --compartment-id-in-subtree true \
   | jq -r '.data[] | select(."compartment-id" == null) | .id'
+
+
+### 3) Obtener todas las politicas // Get all policies
+```bash
+oci iam policy list --compartment-id $OCI_TENANCY --all > policies.json
